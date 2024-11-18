@@ -6,8 +6,8 @@ export default function ServerList() {
         <div className="mx-4 my-4">
             <div className="服务器在线Card02-改颜色 relative" style={{width: 318, height: 71,}}>
 
-                <div className="图标在线 relative left-0 top-0 bg-gray-700 rounded-[13px] hover:glow-border"
-                     style={{width: 312, height: 71,}}>
+                <button className="图标在线 relative left-0 top-0 bg-gray-700 rounded-[13px] hover:shadow-[0_0_10px_0_rgba(255,255,255,0.8)] transition-all duration-300 focus:bg-[#42566C] focus:shadow-[inset_0px_0px_10px_0px_rgba(255,_255,_255,_0.3)]"
+                     style={{width: 350, height: 71,}}>
                     <div className="px-2 py-3.5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="42.498291015625"
                              height="40" viewBox="0 0 42.498291015625 40" fill="none">
@@ -28,8 +28,8 @@ export default function ServerList() {
                        style={{left: 170, top: 35,}}>14/29</p>
 
                     <p className="28ms w-12 absolute text-base font-65medium text-green-400"
-                       style={{left: 268, top: 23,}}>28ms</p>
-                </div>
+                       style={{left: 295, top: 23,}}>28ms</p>
+                </button>
 
             </div>
         </div>

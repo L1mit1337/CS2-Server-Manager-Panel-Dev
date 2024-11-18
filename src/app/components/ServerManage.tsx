@@ -12,6 +12,8 @@ export default function ServerManage(){
             <div className="矩形1 bg-gray-300 bg-opacity-5 shadow-xl border rounded-xl border-white border-opacity-20"
                  style={{width: 387, height: 862,}}>
                 <ServerList/>
+                <ServerList/>
+
 
             </div>
 
