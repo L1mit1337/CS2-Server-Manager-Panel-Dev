@@ -73,7 +73,7 @@ return (
                     <br/>
                     <div className="divider"></div>
                     <div>
-                        <button className="btn btn-primary text-white" onClick={getServerInfo}>获取服务器信息</button>
+                        <button className="btn btn-primary text-white">获取服务器信息</button>
                     </div>
 
                     <div className="divider"></div>

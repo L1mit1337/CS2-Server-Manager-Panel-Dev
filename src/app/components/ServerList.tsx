@@ -2,7 +2,10 @@ import '@/app/globals.css'
 export default function ServerList() {
 
     return (
-
+        /*
+        打算这里做一个<ui><li><ServerListDetailed></li><ui/>
+        传值然和遍历
+        * */
         <div className="mx-4 my-4">
             <div className="服务器在线Card02-改颜色 relative" style={{width: 318, height: 71,}}>
 

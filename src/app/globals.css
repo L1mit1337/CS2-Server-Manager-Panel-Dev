@@ -15,17 +15,26 @@
 
 :root {
   --background: #1d232a;
+  /*--background:#18181B;*/
   --foreground: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #1d232a;
+    /*--background:#18181B;*/
     --foreground: #ffffff;
   }
 }
 
 body {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
   color: var(--foreground);
   background: var(--background);
 
