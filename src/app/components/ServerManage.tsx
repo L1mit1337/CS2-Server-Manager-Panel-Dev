@@ -1,6 +1,7 @@
 'use client'
 import {SettingOutlined} from "@ant-design/icons";
 import ServerList from "./ServerList";
+import toast, { Toaster } from 'react-hot-toast';
 import {
     Modal,
     ModalContent,
@@ -24,12 +25,48 @@ export default function ServerManage(){
         port:27015,
         password:""
     });
+    const addServerConstStatic={
+        gameId:730,
+        ip:"",
+        port:27015,
+        password:""
+    }
+
     let portAsString=String(addServerConst.port)
+    let [isLoadingButton,setIsLoadingButton]=useState(false);
     const selectGame=[{key:730,label:"CSGO"},{key:740,label:"CS2"}]
+
+    function alert_success(isSuccess:boolean){
+        if(isSuccess){
+            toast.success('添加成功',{duration:3000});
+        }else{
+            toast.error('添加失败',{duration:3000});
+        }
+
+    }
+
+    function initAddServerFormData(){
+        setAddServerConst(addServerConstStatic)
+        setIsLoadingButton(false);
+    }
+
+    async function handleSubmit(){
+        console.log(JSON.stringify(addServerConst))
+        let success= false;
+        let response = await fetch('http://localhost:3001/api/db/insertNewServer',{
+            headers:new Headers({
+                'Content-Type': 'application/json',
+            }),
+            method: 'POST',
+            body: JSON.stringify(addServerConst)
+        }).then((response) => {return response.json()}).then((res) => {success=res.success});
+        return success
+
+    }
 
     return (
         <>
-
+        <Toaster/>
         <div className="服务器列表 relative" style={{width: 408.39, height: 949.98,}}>
 
             <div className="mx-10">
@@ -56,7 +93,7 @@ export default function ServerManage(){
                 </div>
 
                 <ServerList/>
-                <ServerList/>
+
 
 
             </div>
@@ -148,8 +185,19 @@ export default function ServerManage(){
                         <Button color="danger" variant="light" onPress={onClose}>
                                 关闭
                             </Button>
-                            <Button color="primary" onPress={onClose}>
-                                确定
+                            <Button  color="success" isLoading={isLoadingButton} onPress={async () => {
+                                setIsLoadingButton(true);
+                                if (await handleSubmit()){
+                                    onClose();
+                                    initAddServerFormData()
+                                    alert_success(true)
+                                }else{
+                                    onClose();
+                                    initAddServerFormData()
+                                    alert_success(false)
+                                }
+                            }}>
+                                添加
                             </Button>
                         </ModalFooter>
                     </>}

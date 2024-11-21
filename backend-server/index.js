@@ -20,9 +20,11 @@ app.use(bodyParser.json())
 
 const PORT = 3001;
 
-app.get('/api/db/queryAllServerList', (req, res) => {
+app.post('/api/db/queryAllServerList', (req, res) => {
     const data = db.get("serverList").value()
+    console.log('执行queryAllServerList',data)
     return res.json(data)
+
 })
 
 app.post('/api/db/insertNewServer', async (req, res) => {
@@ -41,6 +43,7 @@ app.post('/api/getInfo/', (req, res) => {
     Server.getInfo(req.body)
         .then(info => res.json(info)) // might have the same problem with bigints
         .catch(e => res.status(500).json({ error: e.message }));
+    console.log("调用/api/getInfo/")
 });
 
 app.post('/api/getPlayers/', (req, res) => {
