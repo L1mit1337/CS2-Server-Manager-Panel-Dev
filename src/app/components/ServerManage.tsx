@@ -13,9 +13,9 @@ import {
     Select, SelectItem
 } from "@nextui-org/react";
 import {Input} from "@nextui-org/react";
-import {useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 
-export default function ServerManage(){
+export default function ServerManage({ onValueChange }:any){
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const ipRegex = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
     const portRegex = /^(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{0,3}|0)$/;
@@ -64,6 +64,36 @@ export default function ServerManage(){
 
     }
 
+    const handleValueFromC = useCallback((valueFromC:any) => {
+
+        // 调用父组件传递的回调函数，将值传递给更上层的组件
+        if (onValueChange) {
+            onValueChange(valueFromC);
+            console.log('Value received from ComponentC:', valueFromC);
+        }
+    },[]);
+
+    let [disableAddButton,setDisableAddButton]=useState(true);
+
+    function valiaddServerForm(){
+        if(addServerConst.gameId
+            && ipRegex.test(addServerConst.ip)
+            && addServerConst.ip != ""
+            && portRegex.test(portAsString)
+            && !isNaN(addServerConst.port)
+            )
+        {
+            setDisableAddButton(false);
+        }else{
+            setDisableAddButton(true);
+        }
+    }
+
+    useEffect(() => {
+        valiaddServerForm()
+    }, [addServerConst]);
+
+
     return (
         <>
         <Toaster/>
@@ -74,7 +104,7 @@ export default function ServerManage(){
                     <SettingOutlined style={{color: "white"}}/>服务器管理</p>
             </div>
 
-            <div className="矩形1 bg-gray-300 bg-opacity-5 shadow-xl border rounded-xl border-white border-opacity-20"
+            <div className="矩形1 bg-[#C4C4C4] bg-opacity-5 shadow-xl border rounded-xl border-white border-opacity-20"
                  style={{width: 387, height: 862,}}>
 
                 <div className="relative left-4 top-1.5">
@@ -92,7 +122,7 @@ export default function ServerManage(){
                     </Button>
                 </div>
 
-                <ServerList/>
+                <ServerList onValueChange={handleValueFromC}/>
 
 
 
@@ -185,7 +215,7 @@ export default function ServerManage(){
                         <Button color="danger" variant="light" onPress={onClose}>
                                 关闭
                             </Button>
-                            <Button  color="success" isLoading={isLoadingButton} onPress={async () => {
+                            <Button isDisabled={disableAddButton} color="success" isLoading={isLoadingButton} onPress={async () => {
                                 setIsLoadingButton(true);
                                 if (await handleSubmit()){
                                     onClose();
