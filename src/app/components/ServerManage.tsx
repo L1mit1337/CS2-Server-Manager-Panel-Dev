@@ -13,7 +13,8 @@ import {
     Select, SelectItem
 } from "@nextui-org/react";
 import {Input} from "@nextui-org/react";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {useClickOutside} from "@reactuses/core";
 
 export default function ServerManage({ onValueChange }:any){
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -34,7 +35,7 @@ export default function ServerManage({ onValueChange }:any){
 
     let portAsString=String(addServerConst.port)
     let [isLoadingButton,setIsLoadingButton]=useState(false);
-    const selectGame=[{key:730,label:"CSGO"},{key:740,label:"CS2"}]
+    const selectGame=[{key:740,label:"CSGO"},{key:730,label:"CS2"}]
 
     function alert_success(isSuccess:boolean){
         if(isSuccess){
@@ -93,11 +94,12 @@ export default function ServerManage({ onValueChange }:any){
         valiaddServerForm()
     }, [addServerConst]);
 
+    let serverManageRef=useRef(null);
 
     return (
         <>
         <Toaster/>
-        <div className="服务器列表 relative" style={{width: 408.39, height: 949.98,}}>
+        <div ref={serverManageRef} className="服务器列表 relative" style={{width: 408.39, height: 949.98,}}>
 
             <div className="mx-10">
                 <p className="服务器管理 w-32 h-8 text-xl leading-normal text-white">
@@ -146,7 +148,7 @@ export default function ServerManage({ onValueChange }:any){
                                     label="游戏"
                                     placeholder="服务器是哪个游戏的?"
                                     className="max-w-xs"
-                                    defaultSelectedKeys={["730"]}
+                                    defaultSelectedKeys={["740"]}
                                     onChange={(e: any) => {
                                         setAddServerConst({...addServerConst, gameId: e.target.value});
                                     }}

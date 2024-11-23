@@ -38,8 +38,6 @@ app.post('/api/db/insertNewServer', async (req, res) => {
 //post请求用req.body
 
 app.post('/api/getInfo/', (req, res) => {
-    console.log(req.body);
-    console.log(req.body.port)
     Server.getInfo(req.body)
         .then(info => res.json(info)) // might have the same problem with bigints
         .catch(e => res.status(500).json({ error: e.message }));

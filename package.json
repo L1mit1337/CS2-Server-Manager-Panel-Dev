@@ -11,6 +11,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@nextui-org/react": "^2.4.8",
+    "@reactuses/core": "^5.0.23",
     "axios": "^1.7.7",
     "framer-motion": "^11.11.17",
     "next": "15.0.1",

@@ -1,8 +1,10 @@
 import '@/app/globals.css'
-import React, {memo, useCallback, useContext, useEffect, useState} from "react";
+import React, {memo, useCallback, useContext, useEffect, useRef, useState} from "react";
+import Image from "next/image";
 
 
 function  ServerList({ onValueChange}:any) {
+    
     console.log("ServerList被渲染了")
     let [serverListData, setServerListData] = useState([{
         id:Number,
@@ -35,6 +37,9 @@ function  ServerList({ onValueChange}:any) {
 
     function ServerCard({server}:any) {
 
+        const serverCard =useRef(null);
+        const buttonRef = useRef(null); // 创建一个引用
+
         let [isServerOffline,setIsServerOffline]=useState(true);
         let queryServerInfoParameter = {
             ip: server.ip, port: server.port,
@@ -58,11 +63,12 @@ function  ServerList({ onValueChange}:any) {
         })
 
 
-
         const handleClickServer = () => {
-
+            sessionStorage.setItem('currentServerId',server.id)
             console.log('从ServerList组件传值',serverInfo)
             onValueChange({isServerOffline:isServerOffline,...serverInfo});
+
+
         };
 
         async function getServerInfo() {
@@ -85,41 +91,63 @@ function  ServerList({ onValueChange}:any) {
             }).then(function (data) {
                 setServerInfo(data);
             });
+
         }
 
 
 
+
         useEffect(() => {
+            console.log("server发生变化")
             if(server.isFake){
                 console.log('暂时不发请求以免发生错误')
             }else{
                 // 每1秒调用一次 getServerInfo
 
                 const intervalId = setInterval(getServerInfo, 5000);
+
                 // 清理定时器，防止内存泄漏
                 return () => clearInterval(intervalId);
             }
 
         }, [server]);
 
+        useEffect(() => {
+
+            if(sessionStorage.getItem('currentServerId')==server.id){
+
+                console.log('从ServerList组件传值', serverInfo,sessionStorage.getItem('currentServerId'),server.id,);
+
+                onValueChange({ isServerOffline: isServerOffline, ...serverInfo });
+            }else{
+
+            }
+
+        }, [serverInfo]);
+
+        let [isButtonFocus,setIsButtonFocus]=useState(false);
 
         return (
-            <div className="mx-4 my-4">
+            <div ref={serverCard} className="mx-4 my-4">
                 <div className="服务器在线Card02-改颜色 relative" style={{width: 318, height: 71,}}>
 
                     <button
+                        ref={buttonRef}
+                        onFocus={()=>{setIsButtonFocus(true)}}
+                        onBlur={()=>{setIsButtonFocus(false)}}
                         onClick={handleClickServer}
-                        className="图标在线 relative left-0 top-0 bg-gray-700 rounded-[13px] hover:shadow-[0_0_10px_0_rgba(255,255,255,0.8)] transition-all duration-300 focus:bg-[#42566C] focus:shadow-[inset_0px_0px_10px_0px_rgba(255,_255,_255,_0.3)]"
-                        style={{width: 350, height: 71,}}>
+                        className={`relative left-0 top-0 rounded-[13px] hover:shadow-[0_0_10px_0_rgba(255,255,255,0.8)] transition-all duration-300 ${isButtonFocus?'bg-[#42566C] shadow-[inset_0px_0px_10px_0px_rgba(255,_255,_255,_0.3)]':'bg-gray-700'}`}
+                        style={{width: 350, height: 71}}>
                         <div className="px-2 py-3.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="42.498291015625"
-                                 height="40" viewBox="0 0 42.498291015625 40" fill="none">
-                                <path fillRule="evenodd" fill="#FFFFFF"
-                                      d="M4.88898 3L35.1109 3C36.1543 3 36.9999 3.89532 36.9999 5.00016L36.9999 36.9998C36.9999 38.1047 36.1543 39 35.1109 39L4.88898 39C3.84552 39 2.99994 38.1047 2.99994 36.9998L2.99994 5.00016C2.99994 3.89532 3.84552 3 4.88898 3ZM33.2222 7L33.2222 19L6.77774 19L6.77774 7L33.2222 7ZM10.5555 11L16.2222 11L16.2222 15L10.5555 15L10.5555 11ZM6.77774 35L6.77774 23L33.2222 23L33.2222 35L6.77774 35ZM16.2222 31L10.5555 31L10.5555 27L16.2222 27L16.2222 31Z">
-                                </path>
-                                <circle cx="28.740966796875" cy="13" r="3" fill="#52C41A">
-                                </circle>
-                            </svg>
+
+                            <Image
+                                src={`/img/ico/${server.gameId}.ico`}
+                                alt="Picture of the author"
+                                width={42}
+                                height={40}
+                            />
+
+
                         </div>
 
                         <p className=" w-44 h-4 absolute text-left text-xl font-medium text-white"
