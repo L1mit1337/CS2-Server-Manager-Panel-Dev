@@ -65,6 +65,7 @@ function  ServerList({ onValueChange}:any) {
 
         const handleClickServer = () => {
             sessionStorage.setItem('currentServerId',server.id)
+            sessionStorage.setItem('currentServer',JSON.stringify(server))
             console.log('从ServerList组件传值',serverInfo)
             onValueChange({isServerOffline:isServerOffline,...serverInfo});
 
@@ -79,19 +80,32 @@ function  ServerList({ onValueChange}:any) {
                     method: 'POST',
                     body: JSON.stringify(queryServerInfoParameter)
                 }
-            ).then((res) => {
+            )
+                // .then((res) => {
+                //     if(res.status ==500){
+                //         console.log('getServerInfo() 进入.then() res.status ==500')
+                //         setIsServerOffline(true)
+                //     }else{
+                //         return res.json()
+                //     }
+                // })
 
-                if(res.status ==500){
-                    setIsServerOffline(true)
-                }else{
-                    setIsServerOffline(false)
-                }
+            if(response.ok){
+               console.log('response.ok 进入response.status == 200 设置serverinfo')
+               response.json().then(data => {setServerInfo(data)})
+                setIsServerOffline(false);
+            }else {
+                console.log('!!!!response.ok')
+            }
 
-                return res.json()
-            }).then(function (data) {
-                setServerInfo(data);
-            });
-
+            // if(response.status == 200){
+            //     console.log('getServerInfo() 进入response.status == 200 设置serverinfo')
+            //     setServerInfo(response.then(({data}:any)=>{
+            //         setServerInfoForPlayers(data)
+            //         setIsServerOffline(false);
+            //     }));
+            // }
+            //setServerInfoForPlayers(serverInfo.players)
         }
 
 
@@ -167,7 +181,7 @@ function  ServerList({ onValueChange}:any) {
                                    style={{
                                        left: 170,
                                        top: 35,
-                                   }}>{serverInfoForPlayers.online}/{serverInfoForPlayers.max}</p>
+                                   }}>{serverInfo.players.online}/{serverInfo.players.max}</p>
 
                                 <p className="28ms w-12 absolute text-base font-65medium text-green-400"
                                    style={{left: 295, top: 23,}}>{serverInfo.ping}ms</p>

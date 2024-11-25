@@ -2,7 +2,8 @@ BigInt.prototype.toJSON = function () { return this.toString() }; //加上以下
 const express = require("express")
 const cors = require("cors")
 const lowDb = require("lowdb")
-const { Server, Options,RCON} = require('@fabricio-191/valve-server-query');
+const { Server, RCON, MasterServer } = require('@fabricio-191/valve-server-query');
+
 const FileSync = require("lowdb/adapters/FileSync")
 const bodyParser = require("body-parser")
 const db = lowDb(new FileSync('db.json'))
@@ -37,23 +38,30 @@ app.post('/api/db/insertNewServer', async (req, res) => {
 
 //post请求用req.body
 
-app.post('/api/getInfo/', (req, res) => {
+app.post('/api/getInfo/', async (req, res) => {
+    // const server = await Server(req.body)
+    // server.getInfo()
+    //     .then(info => res.json(info)) // might have the same problem with bigints
+    //     .catch(e => res.status(500).json({ error: e.message }));
     Server.getInfo(req.body)
         .then(info => res.json(info)) // might have the same problem with bigints
         .catch(e => res.status(500).json({ error: e.message }));
+
     console.log("调用/api/getInfo/")
 });
 
-app.post('/api/getPlayers/', (req, res) => {
-    Server.getPlayers(req.body)
-        .then(players => res.json(players))
-        .catch(e => res.status(500).json({ error: e.message }));
+app.post('/api/getPlayers/', async (req, res) => {
+    const server = await Server(req.body);
+    const players = await server.getPlayers()
+        .then(players =>res.json(players)).
+        catch(e => res.status(500).json({error: e.message}));
 });
 
-app.post('/api/getRules/', (req, res) => {
-    Server.getRules(req.body)
-        .then(rules => res.json(rules))
-        .catch(e => res.status(500).json({ error: e.message }));
+app.post('/api/getRules/', async (req, res) => {
+    const server = await Server(req.body);
+    await server.getRules().then(rules => res.json(rules))
+        .catch(e => res.status(500).json({error: e.message}));
+
 });
 
 app.post('/api/execRconCommand/', async (req, res) => {

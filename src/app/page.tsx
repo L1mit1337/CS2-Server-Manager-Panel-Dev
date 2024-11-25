@@ -1,9 +1,8 @@
 'use client'
 import ServerManage from "@/app/components/ServerManage";
-import Console from "@/app/components/Console";
 import ServerInfo from "@/app/components/ServerInfo";
-import QuickFeature from "@/app/components/QuickFeature";
 import {createContext, useCallback, useRef, useState} from "react";
+import QuickFeature from "@/app/components/QuickFeature";
 
 
 
@@ -40,7 +39,7 @@ export default function Home(){
                         style={{width: 950, height: 1,}}/>
 
                     <div className="col-span-2 row-span-2"><ServerInfo sharedValue={sharedValue}/></div>
-                    <div className="col-span-2 row-span-2 col-start-2 row-start-3">3</div>
+                    <div className="col-span-2 row-span-2 col-start-2 row-start-3"></div>
                     <div className="row-span-4 col-start-4 row-start-1">4</div>
                 </div>
 
